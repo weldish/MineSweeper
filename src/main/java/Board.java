@@ -90,13 +90,26 @@ public class Board {
 
 
     public void printBoard(boolean revealMines) {
-        for (int i = 0; i < numRows; i++) {
-            for (int j = 0; j < numCols; j++) {
-                Tile tile = tiles[i][j];
-                if (tile.isRevealed() || (revealMines && tile.isMine())) {
-                    System.out.print(tile.isMine() ? "* " : tile.getAdjacentMines() + " ");
+        System.out.print("    ");
+        for (int col = 0; col < numCols; col++) {
+            System.out.print(col + "   ");
+        }
+        System.out.println();
+
+        for (int row = 0; row < numRows; row++) {
+            System.out.print(row + " |");
+            for (int col = 0; col < numCols; col++) {
+                Tile tile = tiles[row][col];
+                if (tile.isRevealed()) {
+                    if (tile.isMine()) {
+                        System.out.print(" M |"); // print M for Mine
+                    } else {
+                        System.out.print(tile.getAdjacentMines() > 0 ? tile.getAdjacentMines() + " | " : "  | "); // print a Number or a space for 0 adjacent mines
+                    }
+                } else if (tile.isFlagged()) {
+                    System.out.print(" F |"); // Flagged
                 } else {
-                    System.out.print(". ");
+                    System.out.print(" H |"); // H for a tile that is not revealed yet
                 }
             }
             System.out.println();
@@ -105,3 +118,9 @@ public class Board {
 
 
 }
+
+//next to do list
+/*
+what happens when a player reveals
+
+ */
