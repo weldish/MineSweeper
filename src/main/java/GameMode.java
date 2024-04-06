@@ -21,6 +21,17 @@ public class GameMode {
         this.numberOfMines = numberOfMines;
     }
 
-
+    public static GameMode DifficultyLevel(String diffcultyLevel) {
+        switch (diffcultyLevel) {
+            case "easy":
+                return new GameMode(8, 8, 10);
+            case "medium":
+                return new GameMode(15, 18, 40);
+            case "hard":
+                return new GameMode(25, 25, 100);
+            default:
+               return new GameMode(8, 8, 10);
+        }
+    }
 
 }
