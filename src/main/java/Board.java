@@ -178,16 +178,27 @@ public class Board {
     }
 
     public void printBoard(boolean revealMines, int remainingFlags) {
+        //System.out.println();
         System.out.println( "Remaining Flags: " + ANSIColors.CYAN_TEXT + remainingFlags + ANSIColors.RESET);
         System.out.println();
-        System.out.print("    ");
+        System.out.print("     ");
         for (int col = 0; col < numCols; col++) {
-            System.out.print(ANSIColors.BLUE_TEXT + col + "  " + ANSIColors.RESET);
+            if( col < 10) {
+                System.out.print(ANSIColors.BLUE_TEXT + col + "  " + ANSIColors.RESET);
+            } else {
+                System.out.print(ANSIColors.BLUE_TEXT + col + " "+ ANSIColors.RESET);
+            }
+
         }
         System.out.println();
-
+        System.out.println();
         for (int row = 0; row < numRows; row++) {
-            System.out.print(ANSIColors.BLUE_TEXT + row + "  " + ANSIColors.RESET);
+
+            if( row < 10) {
+                System.out.print(ANSIColors.BLUE_TEXT + row + "   " + ANSIColors.RESET);
+            } else {
+                System.out.print(ANSIColors.BLUE_TEXT + row + "  " + ANSIColors.RESET);
+            }
             for (int col = 0; col < numCols; col++) {
                 Tile tile = tiles[row][col];
                 if (tile.isRevealed()) {
@@ -197,7 +208,7 @@ public class Board {
                         System.out.print(tile.getAdjacentMines() > 0 ? ANSIColors.GREEN_TEXT +  " " + tile.getAdjacentMines() + " " + ANSIColors.RESET: ANSIColors.WHITE_TEXT + " - " + ANSIColors.RESET); // print a Number or a space for 0 adjacent mines
                     }
                 } else if (tile.isFlagged()) {
-                    System.out.print(ANSIColors.RED_TEXT + ANSIColors.BG_WHITE +" F "+ ANSIColors.RESET); // Flagged
+                    System.out.print(ANSIColors.BLACK_TEXT + ANSIColors.BG_YELLOW +" F "+ ANSIColors.RESET); // Flagged
                 } else {
                     System.out.print(ANSIColors.BLACK_TEXT + ANSIColors.BG_WHITE + " H " + ANSIColors.RESET); // H for a tile that is not revealed yet
                 }
