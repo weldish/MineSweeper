@@ -5,11 +5,12 @@ public class Board {
     private int numRows;
     private int numCols;
     private Tile[][] tiles;
-    private int numberOfMines = 8;
-    Board(int numRows, int numCols){
+    private int numberOfMines;
+    Board(int numRows, int numCols, int numberOfMines){
         this.numRows = numRows;
         this.numCols = numCols;
-        tiles = new Tile[numRows][numCols];   // A 2d-array of tiles
+        this.numberOfMines = numberOfMines;
+        tiles = new Tile[numRows][numCols];   // create A 2d-array of tiles
         initTheBoard();      // initializing the board
         placeMinesOnBoard();  // placing mines on the board
         countMinesForEachTile(); // after randomly placing the mines, we count adjacent mines for each tile
@@ -57,7 +58,7 @@ public class Board {
     private void initTheBoard() {
         for (int i = 0; i < numRows; i++) {
             for (int j = 0; j < numCols; j++) {
-                tiles[i][j] = new Tile( i, j);
+                tiles[i][j] = new Tile();
             }
         }
     }
