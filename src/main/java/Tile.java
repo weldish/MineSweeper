@@ -1,6 +1,4 @@
 public class Tile {
-    private int x;      // x-coordinate
-    private int y;     // y-coordinate
     private boolean isMine;  // Each tile on the board can be a mine or not.
     private boolean isRevealed;   // A tile can be revealed by the player
     private boolean isFlagged;     // A tile can be flagged by the player.
@@ -8,8 +6,6 @@ public class Tile {
 
 
     public Tile(int x, int y) {
-        this.x = x;
-        this.y = y;
         this.isMine = false;
         this.isRevealed = false;
         this.isFlagged = false;
