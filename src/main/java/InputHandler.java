@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.InputMismatchException;
 public class InputHandler {
 
     private Scanner scanner;
@@ -7,9 +8,11 @@ public class InputHandler {
         this.scanner = new Scanner(System.in);
     }
 
+    // This validates the userinput
     public UserInput getUserInput(int numRows, int numCols) {
         while (true) {
             System.out.println("Enter ('r' to reveal, 'f' to flag) followed by row and column numbers separated by a space: ");
+            scanner.nextLine(); // getting rid any newlines from before
             String input = scanner.nextLine().trim();
             String[] parts = input.split("\\s+"); // Split by one or more spaces
 
@@ -40,4 +43,33 @@ public class InputHandler {
         }
 
     }
+
+    // this validates the difficulty level
+    public String getDifficultyLevel() {
+        while (true) {
+            System.out.print("Select difficulty level (1 for easy, 2 for medium, 3 for hard): ");
+            int choice;
+            try {
+                choice = scanner.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number (1, 2, or 3).");
+                scanner.next(); // getting rid of the invalid input
+                continue;
+            }
+
+            switch (choice) {
+                case 1:
+                    return "easy";
+                case 2:
+                    return "medium";
+                case 3:
+                    return "hard";
+                default:
+                    System.out.println("Invalid choice. Please enter a number (1, 2, or 3).");
+                    break;
+            }
+        }
+    }
+
 }
+

@@ -4,15 +4,28 @@ public class MinesweeperGame {
     private Board board;
     private boolean gameIsOver;
     private boolean gameIsWon= false;
+    private InputHandler inputHandler;
+    private GameMode gameMode;
+    public MinesweeperGame() {
 
-    public MinesweeperGame(int numRows, int numCols) {
-        this.board = new Board(numRows, numCols);
+        inputHandler = new InputHandler();
 
+        // get the level of difficulty from the user
+        String difficultyLevel = inputHandler.getDifficultyLevel();
+
+        // set the level of diffculty
+        gameMode = GameMode.DifficultyLevel(difficultyLevel);
+
+        // create an instance of the board with this level of difficulty
+        int numRows = gameMode.getNumRows();
+        int numCols = gameMode.getNumCols();
+        int numberOfMines = gameMode.getNumberOfMines();
+        board = new Board(numRows, numCols, numberOfMines);
     }
 
+    // this method starts the minesweeper game
     public void startGame() {
 
-        InputHandler inputHandler = new InputHandler();
         int remainingFlags = board.getNumberOfMines();  // keeping track of number of places flags by the user
         while (!gameIsOver && !gameIsWon) {
 
@@ -22,9 +35,9 @@ public class MinesweeperGame {
             int numRows = board.getNumRows();
             int numCols = board.getNumCols();
 
-            UserInput userInput = inputHandler.getUserInput(numRows, numCols); // this method validates the input
+            UserInput userInput = inputHandler.getUserInput(numRows, numCols); // this method validates the user input
 
-            // input is validated
+            // once input is validated
             String movetype = userInput.moveType;
             int row = userInput.row;
             int col = userInput.col;

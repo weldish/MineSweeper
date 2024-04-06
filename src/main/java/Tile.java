@@ -5,7 +5,7 @@ public class Tile {
     private int adjacentMines;      // number of mines within one unit of distance
 
 
-    public Tile(int x, int y) {
+    public Tile() {
         this.isMine = false;
         this.isRevealed = false;
         this.isFlagged = false;
