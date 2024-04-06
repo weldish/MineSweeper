@@ -12,7 +12,7 @@ public class InputHandler {
     public UserInput getUserInput(int numRows, int numCols) {
         while (true) {
             System.out.println("Enter ('r' to reveal, 'f' to flag) followed by row and column numbers separated by a space: ");
-            scanner.nextLine(); // getting rid any newlines from before
+             // getting rid any newlines from before
             String input = scanner.nextLine().trim();
             String[] parts = input.split("\\s+"); // Split by one or more spaces
 
@@ -51,6 +51,7 @@ public class InputHandler {
             int choice;
             try {
                 choice = scanner.nextInt();
+                scanner.nextLine(); // getting rid of any newlines
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter a number (1, 2, or 3).");
                 scanner.next(); // getting rid of the invalid input
