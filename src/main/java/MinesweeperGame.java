@@ -4,8 +4,12 @@ public class MinesweeperGame {
     private Board board;
     private boolean gameIsOver;
     private boolean gameIsWon= false;
+    private boolean isTheFirstMove = true;
     private InputHandler inputHandler;
     private GameMode gameMode;
+
+
+
     public MinesweeperGame() {
 
         inputHandler = new InputHandler();
@@ -23,13 +27,14 @@ public class MinesweeperGame {
         board = new Board(numRows, numCols, numberOfMines);
     }
 
+
     // this method starts the minesweeper game
     public void startGame() {
 
         int remainingFlags = board.getNumberOfMines();  // keeping track of number of places flags by the user
         while (!gameIsOver && !gameIsWon) {
 
-            board.printBoard(false, remainingFlags);
+            board.printBoard( remainingFlags);
             System.out.println();
 
             int numRows = board.getNumRows();
@@ -42,6 +47,9 @@ public class MinesweeperGame {
             int row = userInput.row;
             int col = userInput.col;
 
+            // Place mines considering the first move
+            placeMinesIfFirstMove(row, col);
+
             // if the input is to reveal a tile
             if(movetype.equals("r")) {
 
@@ -51,7 +59,9 @@ public class MinesweeperGame {
                     gameIsOver = true;
                     selectedTile.setRevealed(true);
                     System.out.println("************** Game Over ************");
-                    board.printBoard(true, remainingFlags);
+                    // a method here for reveling all mines is the game is over
+                    board.revealAllMines(); // Reveal all mines that are not flagged already by the player
+                    board.printBoard(remainingFlags);
                     // ask if the player want to play again.
                 } else {
                     board.revealTile(row, col); // reveal the tile and its neighbors if it is an empty tile
@@ -59,7 +69,7 @@ public class MinesweeperGame {
                 gameIsWon = board.checkIfPlayerHasWon(); // Check for a win after a player has revealed a tile
                 if (gameIsWon) {
                     System.out.println("********  Congratulations, You Have Won The Game!  ********");
-                    board.printBoard(true, remainingFlags); // reveal the mines since the game is won
+                    board.printBoard(remainingFlags); // reveal the mines since the game is won
                 }
 
                 // if the input is to flag a tile
@@ -84,4 +94,18 @@ public class MinesweeperGame {
 
     }
 
+   // checking if it is the first move when a player makes a move
+    private void placeMinesIfFirstMove(int row, int col) {
+        if (isTheFirstMove){ // if this is the first move, then placer the mines on board
+            board.placeMinesOnBoard(row, col); // Adjust placeMines to avoid the first move
+            isTheFirstMove = false;
+        }
+    }
+
+    private void resetGame() {
+        //board.setFirstMoveMade(false);
+        // Other reset logic...
+    }
+
 }
+
