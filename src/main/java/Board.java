@@ -12,8 +12,8 @@ public class Board {
         this.numberOfMines = numberOfMines;
         tiles = new Tile[numRows][numCols];   // create A 2d-array of tiles
         initTheBoard();      // initializing the board
-        placeMinesOnBoard();  // placing mines on the board
-        countMinesForEachTile(); // after randomly placing the mines, we count adjacent mines for each tile
+        //placeMinesOnBoard();  // placing mines on the board
+        //countMinesForEachTile(); // after randomly placing the mines, we count adjacent mines for each tile
     }
 
     public int getNumRows() {
@@ -63,68 +63,45 @@ public class Board {
         }
     }
 
-    private void placeMinesOnBoard() {
+    public void placeMinesOnBoard(int firstMoveRow, int firstMoveCol) {
         Random rand = new Random();
         int numOfPlacedMines = 0;
         while (numOfPlacedMines < numberOfMines) {
             int row = rand.nextInt(numRows);
             int col = rand.nextInt(numCols);
-            Tile tile = tiles[row][col];
-            if (!tile.isMine()) {  // checking incase the tile is a mine
-                tile.setMine(true);
+            Tile randomlySelectedTile = tiles[row][col];  // randomly selected tile for the placement of a mine
+            // if is this randomly selected tile is near the first move , then we don't place a mine on it
+            // we also don't a mine on it if it is a mine already.
+            if (!isRandomTileNearFirstMove(row, col, firstMoveRow, firstMoveCol) && !randomlySelectedTile.isMine()) {
+                randomlySelectedTile.setMine(true);
+                updateAdjacentMineCounts(row, col);
                 numOfPlacedMines++;
             }
         }
     }
 
-    // counting the number of mines adjacent to every tile that is not a mine.
-    private void countMinesForEachTile(){
-        for (int row = 0; row < numRows; row++) {
-            for (int col = 0; col < numCols; col++) {
-                if (!tiles[row][col].isMine()) { // checking if the time is a mine and if it is we don,t need to consider it
-                    int mines = countAdjacentMines(row, col);
-                    tiles[row][col].setAdjacentMines(mines); // setting the number of mines nearby
+    private boolean isRandomTileNearFirstMove(int row, int col, int firstMoveRow, int firstMoveCol) {
+        return Math.abs(row - firstMoveRow) <= 1 && Math.abs(col - firstMoveCol) <= 1;
+    }
+
+
+    private void updateAdjacentMineCounts(int placedMineRow, int placedMineCol) {
+        // Looping through all adjacent cells
+        for (int rowOffset = -1; rowOffset <= 1; rowOffset++) {
+            for (int colOffset = -1; colOffset <= 1; colOffset++) {
+                int adjacentTileRow = placedMineRow + rowOffset;
+                int adjacentTileCol = placedMineCol + colOffset;
+
+                // Check if the adjacent cell is within the bounds of the board
+                if (adjacentTileRow >= 0 && adjacentTileRow < numRows && adjacentTileCol >= 0 && adjacentTileCol < numRows) {
+                    // Increment the adjacent mine count if it's not a mine
+                    Tile adjacentTile = tiles[adjacentTileRow][adjacentTileCol];
+                    if (!adjacentTile.isMine()) {
+                        adjacentTile.incrementAdjacentMines();
+                    }
                 }
             }
         }
-    }
-
-    // counting the number of mines that are adjacent to a tile.
-    private int countAdjacentMines(int row, int col){
-        int numOfNearbyMines = 0;
-
-        // left three of the eight tiles
-        numOfNearbyMines += checkForMine(row-1, col-1);
-        numOfNearbyMines += checkForMine(row, col-1);
-        numOfNearbyMines += checkForMine(row+1, col-1);
-
-        // right three of the eight tiles
-        numOfNearbyMines += checkForMine(row-1, col+1);
-        numOfNearbyMines += checkForMine(row, col+1);
-        numOfNearbyMines += checkForMine(row+1, col+1);
-
-        // top one
-        numOfNearbyMines += checkForMine(row-1, col);
-
-        // bottom one
-        numOfNearbyMines += checkForMine(row+1, col);
-
-
-        return numOfNearbyMines;
-
-    }
-
-    // this method checks if this tile is a mine or not and if it is it returns 1
-    private int checkForMine(int row, int col){
-    // check if it is out of bounds
-        if(row < 0 || row >= numRows || col < 0 || col >= numCols){
-            return 0;
-        }
-        Tile tile = tiles[row][col];
-        if (tile.isMine()){ // if it is a mine
-            return 1;
-        }
-        return 0;
     }
 
 
@@ -177,7 +154,20 @@ public class Board {
         return true;
     }
 
-    public void printBoard(boolean revealMines, int remainingFlags) {
+    // a method for revealing all mines if the game is over
+    public void revealAllMines() {
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols; col++) {
+                Tile tile = tiles[row][col];
+                // if the tile is a mine and it is not flagged by the player already: set it to true
+                if (tile.isMine() && !tile.isFlagged()) {
+                    tile.setRevealed(true);
+                }
+            }
+        }
+    }
+
+    public void printBoard(int remainingFlags) {
         //System.out.println();
         System.out.println( "Remaining Flags: " + ANSIColors.CYAN_TEXT + remainingFlags + ANSIColors.RESET);
         System.out.println();
